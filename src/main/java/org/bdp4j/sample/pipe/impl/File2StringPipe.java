@@ -35,6 +35,7 @@ public class File2StringPipe extends Pipe {
 
     /**
      * The imput type of Instance.getData
+     * @return the input type
      */
     @Override
     public Class<?> getInputType() {
@@ -43,6 +44,7 @@ public class File2StringPipe extends Pipe {
 
     /**
      * The output type of Instance.getData
+     * @return the output type
      */
     @Override
     public Class<?> getOutputType() {
@@ -51,6 +53,7 @@ public class File2StringPipe extends Pipe {
 
     /**
      * Pipe the instance
+     * @param carrier The instance to pipe
      */
     @Override
     public Instance pipe(Instance carrier) {

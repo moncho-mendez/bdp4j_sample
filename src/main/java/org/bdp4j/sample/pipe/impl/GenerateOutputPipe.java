@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
 import org.bdp4j.types.Instance;
 
@@ -21,12 +22,12 @@ public class GenerateOutputPipe extends Pipe {
     private static final Logger logger = LogManager.getLogger(GenerateOutputPipe.class);
 
     /**
-     * The name of the property to store the length of a string
+     * The default file to store CSV contents
      */
     public static final String DEFAULT_FILE = "output.csv";
 
     /**
-     * The property name
+     * The output file
      */
     String outFile = null;
 
@@ -52,6 +53,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * Constructor customizing the property name
+     * @param outFile The file to store the information contained in instances
      */
     public GenerateOutputPipe(String outFile) {
         /* Must declare here the dependencies */
@@ -62,7 +64,25 @@ public class GenerateOutputPipe extends Pipe {
     }
 
     /**
+     * Setter for outFile (the filepath to store the CSV representation of Instances)
+     * @param outFile the filepath to store the CSV representation of Instances
+     */
+    @PipeParameter(name="outFile", description="The file to store the CSV representation of instances", defaultValue=DEFAULT_FILE)
+    public void setOutFile(String outFile){
+        this.outFile=outFile;
+    }
+
+    /**
+     * Getter for outFile (the filepath to store the CSV representation of Instances)
+     * @return Return the filepath to store the CSV representation of Instances
+     */
+    public String getOutFile(){
+        return this.outFile;
+    }
+
+    /**
      * The imput type of Instance.getData
+     * @return the input type
      */
     @Override
     public Class<?> getInputType() {
@@ -71,6 +91,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * The output type of Instance.getData
+     * @return the output type
      */
     @Override
     public Class<?> getOutputType() {
@@ -79,6 +100,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * Pipe the instance
+     * @param carrier The instance to pipe
      */
     @Override
     public Instance pipe(Instance carrier) {
