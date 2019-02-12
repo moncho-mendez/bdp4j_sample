@@ -1,21 +1,22 @@
 package org.bdp4j.sample.pipe.impl;
 
+import com.google.auto.service.AutoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.TargetAssigningPipe;
+import org.bdp4j.types.Instance;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.bdp4j.pipe.Pipe;
-import org.bdp4j.pipe.TargetAssigningPipe;
-import org.bdp4j.types.Instance;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * A pipe able to find the target for the SMS representation 
  */
+@AutoService(Pipe.class)
 @TargetAssigningPipe
 public class File2TargetAssignPipe extends Pipe {
     /**

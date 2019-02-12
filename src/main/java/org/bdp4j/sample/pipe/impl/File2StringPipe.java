@@ -1,22 +1,23 @@
 package org.bdp4j.sample.pipe.impl;
 
+import com.google.auto.service.AutoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.TransformationPipe;
+import org.bdp4j.types.Instance;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.bdp4j.pipe.Pipe;
-import org.bdp4j.pipe.TransformationPipe;
-import org.bdp4j.types.Instance;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * A pipe able to load the text from a file (i.e. a file conteining the text of
  * an SMS message)
  */
+@AutoService(Pipe.class)
 @TransformationPipe
 public class File2StringPipe extends Pipe {
     /**

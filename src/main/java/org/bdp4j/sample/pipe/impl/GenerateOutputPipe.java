@@ -1,8 +1,6 @@
 package org.bdp4j.sample.pipe.impl;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
+import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bdp4j.pipe.Pipe;
@@ -10,10 +8,14 @@ import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
 import org.bdp4j.types.Instance;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 /**
  * A pipe able to measure the length of a string and create the corresponding
  * property
  */
+@AutoService(Pipe.class)
 @TeePipe
 public class GenerateOutputPipe extends Pipe {
     /**
@@ -53,6 +55,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * Constructor customizing the property name
+     *
      * @param outFile The file to store the information contained in instances
      */
     public GenerateOutputPipe(String outFile) {
@@ -64,24 +67,27 @@ public class GenerateOutputPipe extends Pipe {
     }
 
     /**
-     * Setter for outFile (the filepath to store the CSV representation of Instances)
-     * @param outFile the filepath to store the CSV representation of Instances
-     */
-    @PipeParameter(name="outFile", description="The file to store the CSV representation of instances", defaultValue=DEFAULT_FILE)
-    public void setOutFile(String outFile){
-        this.outFile=outFile;
-    }
-
-    /**
      * Getter for outFile (the filepath to store the CSV representation of Instances)
+     *
      * @return Return the filepath to store the CSV representation of Instances
      */
-    public String getOutFile(){
+    public String getOutFile() {
         return this.outFile;
     }
 
     /**
+     * Setter for outFile (the filepath to store the CSV representation of Instances)
+     *
+     * @param outFile the filepath to store the CSV representation of Instances
+     */
+    @PipeParameter(name = "outFile", description = "The file to store the CSV representation of instances", defaultValue = DEFAULT_FILE)
+    public void setOutFile(String outFile) {
+        this.outFile = outFile;
+    }
+
+    /**
      * The imput type of Instance.getData
+     *
      * @return the input type
      */
     @Override
@@ -91,6 +97,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * The output type of Instance.getData
+     *
      * @return the output type
      */
     @Override
@@ -100,6 +107,7 @@ public class GenerateOutputPipe extends Pipe {
 
     /**
      * Pipe the instance
+     *
      * @param carrier The instance to pipe
      */
     @Override
@@ -108,8 +116,8 @@ public class GenerateOutputPipe extends Pipe {
             try {
                 out = new PrintWriter(outFile);
                 out.append("id;content;");
-                for (String i : carrier.getPropertyList()){
-                    out.append(i+";");
+                for (String i : carrier.getPropertyList()) {
+                    out.append(i + ";");
                 }
                 out.append("target\n");
             } catch (FileNotFoundException e) {
@@ -117,16 +125,16 @@ public class GenerateOutputPipe extends Pipe {
                 e.printStackTrace();
                 System.exit(0);
             }
-            fileOpened=true;
+            fileOpened = true;
         }
 
-        out.append(carrier.getName()+";"+carrier.getData()+";");
-        for (Object i : carrier.getValueList()){
-            out.append(i.toString()+";");
+        out.append(carrier.getName() + ";" + carrier.getData() + ";");
+        for (Object i : carrier.getValueList()) {
+            out.append(i.toString() + ";");
         }
-        out.append(carrier.getTarget().toString()+"\n");
+        out.append(carrier.getTarget().toString() + "\n");
 
-        if (isLast() && fileOpened){
+        if (isLast() && fileOpened) {
             out.close();
         }
         return carrier;
