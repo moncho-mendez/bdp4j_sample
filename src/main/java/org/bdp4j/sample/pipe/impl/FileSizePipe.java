@@ -13,7 +13,7 @@ import java.io.File;
  */
 @AutoService(Pipe.class)
 @PropertyComputingPipe
-public class FilesizePipe extends Pipe {
+public class FileSizePipe extends Pipe {
     /**
      * The name of the deafult propety to store the filesize
      */
@@ -27,11 +27,11 @@ public class FilesizePipe extends Pipe {
     /**
      * Default consturctor
      */
-    public FilesizePipe() {
+    public FileSizePipe() {
         this(DEFAULT_FILESIZE_PROP);
     }
 
-    public FilesizePipe(String propName){
+    public FileSizePipe(String propName) {
         /* Must declare here the dependencies */
         /*     alwaysBefore     notAfter */
         super(new Class<?>[0], new Class<?>[0]);

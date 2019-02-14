@@ -1,30 +1,22 @@
 package org.bdp4j.sample;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import org.bdp4j.ml.DatasetFromFile;
+import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.SerialPipes;
+import org.bdp4j.sample.pipe.impl.*;
+import org.bdp4j.transformers.Enum2IntTransformer;
+import org.bdp4j.types.Instance;
+import org.bdp4j.types.Transformer;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.core.Instances;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.bdp4j.ml.DatasetFromFile;
-import org.bdp4j.pipe.Pipe;
-import org.bdp4j.types.Dataset;
-import org.bdp4j.types.Instance;
-import org.bdp4j.types.Transformer;
-
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Instances;
-
-import org.bdp4j.pipe.SerialPipes;
-import org.bdp4j.sample.pipe.impl.*;
-import org.bdp4j.transformers.Date2MillisTransformer;
-import org.bdp4j.transformers.Enum2IntTransformer;
+import java.util.*;
 
 /**
  * Test pipe functioanlity
@@ -42,7 +34,7 @@ public class Main{
         /* Create the prorcessing pipe */
         Pipe p=new SerialPipes(new Pipe[]{
             new File2TargetAssignPipe(),
-            new FilesizePipe(),
+                new FileSizePipe(),
             new File2StringPipe(),
             new MeasureLengthPipe(),
             new GenerateOutputPipe()
@@ -51,7 +43,7 @@ public class Main{
 
         /* Check dependencies */
         if (!p.checkDependencies()) {
-            System.out.println(Pipe.getErrorMesage());
+            System.out.println(Pipe.getErrorMessage());
             System.exit(-1);
         }
  
