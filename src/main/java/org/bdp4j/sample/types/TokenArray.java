@@ -24,6 +24,9 @@ public class TokenArray implements Serializable {
      */
     private List<String> tokens=new ArrayList<>();
 
+    /**
+     * The separators for tokenising
+     */
     public static final String DEFAULT_SEPARATORS=" \t\r\n\f!\"#$%&'()*+,\\-./:;<=>?@[]^_`{|}~";
 
     /**
@@ -39,7 +42,7 @@ public class TokenArray implements Serializable {
      * @param separators the separators to be used
      */
     public TokenArray(String toTokenize, String separators){
-       Collections.list(new StringTokenizer(toTokenize, separators)).stream()
+       tokens=Collections.list(new StringTokenizer(toTokenize, separators)).stream()
           .map(token -> (String) token)
           .collect(Collectors.toList());
     }
@@ -60,6 +63,7 @@ public class TokenArray implements Serializable {
         HashMap<String,Double> retVal=new HashMap<>();
 
         for (String token:tokens){
+
             /**
              * Add the token to dictionary
              */

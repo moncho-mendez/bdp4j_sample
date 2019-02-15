@@ -5,3 +5,5 @@ target/*
 .vscode
 .settings
 .DS_Store
+
+output2\.csv

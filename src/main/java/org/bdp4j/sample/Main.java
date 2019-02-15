@@ -34,7 +34,7 @@ public class Main{
         /* Create the prorcessing pipe */
         Pipe p=new SerialPipes(new Pipe[]{
             new File2TargetAssignPipe(),
-                new FileSizePipe(),
+            new FileSizePipe(),
             new File2StringPipe(),
             new MeasureLengthPipe(),
             new GenerateStringOutputPipe(),
@@ -43,6 +43,8 @@ public class Main{
             new GenerateFeatureVectorOutputPipe()
            }
         );
+
+        System.out.println("The Pipeline used is"+p);
 
         /* Check dependencies */
         if (!p.checkDependencies()) {

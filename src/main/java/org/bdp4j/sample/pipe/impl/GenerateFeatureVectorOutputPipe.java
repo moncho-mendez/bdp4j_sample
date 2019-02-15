@@ -121,7 +121,7 @@ public class GenerateFeatureVectorOutputPipe extends Pipe {
             try {
                 out = new PrintWriter(outFile);
                 out.append("id;");
-                out.append(Dictionary.getDictionary().toCSV());
+                out.append(Dictionary.getDictionary().toBase64CSV());
                 for (String i : carrier.getPropertyList()) {
                     out.append(i + ";");
                 }

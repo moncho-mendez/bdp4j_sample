@@ -1,8 +1,9 @@
 package org.bdp4j.sample.types;
 
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Base64.Encoder;
 
 /**
  * A generic dictionary to store any kind of string entries
@@ -10,7 +11,6 @@ import java.util.Set;
  * @author José Ramón Méndez
  */
 public class Dictionary implements Iterable<String> {
-
     /**
      * The information storage for the dictionary. Only a Hashset of entries
      * is required
@@ -59,7 +59,6 @@ public class Dictionary implements Iterable<String> {
      */
     public boolean isIncluded(String entry) {
         return entry.contains(entry);
-
     }
 
     /**
@@ -76,12 +75,12 @@ public class Dictionary implements Iterable<String> {
      * Return a list of CSV entries
      * @return list of CSVEntries
      */
-    public String toCSV(){
+    public String toBase64CSV(){
         StringBuilder retVal=new StringBuilder();
-        boolean isFirst=true;
+        Encoder b64encoder=Base64.getEncoder();
         for (String entry:entries){
-            retVal.append(isFirst ? entry : (entry + ";"));
-            isFirst=false;
+            String encoded=new String(b64encoder.encode(entry.getBytes()));
+            retVal.append(encoded + ";");
         }
         return retVal.toString();
     }
