@@ -37,7 +37,10 @@ public class Main{
                 new FileSizePipe(),
             new File2StringPipe(),
             new MeasureLengthPipe(),
-            new GenerateOutputPipe()
+            new GenerateStringOutputPipe(),
+            new String2TokenArray(),
+            new TokenArray2FeatureVector(),
+            new GenerateFeatureVectorOutputPipe()
            }
         );
 
@@ -59,7 +62,7 @@ public class Main{
         Map<String, Transformer> transformersList = new HashMap<>();
         transformersList.put("target", new Enum2IntTransformer(targetValues));
 
-        Instances data = (new DatasetFromFile(GenerateOutputPipe.DEFAULT_FILE,transformersList)).loadFile().getWekaDataset();
+        Instances data = (new DatasetFromFile(GenerateStringOutputPipe.DEFAULT_FILE,transformersList)).loadFile().getWekaDataset();
         
         data.deleteStringAttributes();
         data.setClassIndex(data.numAttributes() - 1);

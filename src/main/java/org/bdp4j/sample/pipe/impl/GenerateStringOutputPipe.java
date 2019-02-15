@@ -17,11 +17,11 @@ import java.io.PrintWriter;
  */
 @AutoService(Pipe.class)
 @TeePipe
-public class GenerateOutputPipe extends Pipe {
+public class GenerateStringOutputPipe extends Pipe {
     /**
      * A logger for logging purposes
      */
-    private static final Logger logger = LogManager.getLogger(GenerateOutputPipe.class);
+    private static final Logger logger = LogManager.getLogger(GenerateStringOutputPipe.class);
 
     /**
      * The default file to store CSV contents
@@ -46,7 +46,7 @@ public class GenerateOutputPipe extends Pipe {
     /**
      * Default consturctor
      */
-    public GenerateOutputPipe() {
+    public GenerateStringOutputPipe() {
         /**
          * Invoke the constructor with the default value
          */
@@ -58,7 +58,7 @@ public class GenerateOutputPipe extends Pipe {
      *
      * @param outFile The file to store the information contained in instances
      */
-    public GenerateOutputPipe(String outFile) {
+    public GenerateStringOutputPipe(String outFile) {
         /* Must declare here the dependencies */
         /* alwaysBefore notAfter */
         super(new Class<?>[0], new Class<?>[0]);
