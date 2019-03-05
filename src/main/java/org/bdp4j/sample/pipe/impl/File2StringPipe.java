@@ -3,7 +3,7 @@ package org.bdp4j.sample.pipe.impl;
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TransformationPipe;
 import org.bdp4j.types.Instance;
 
@@ -17,9 +17,9 @@ import java.nio.file.Paths;
  * A pipe able to load the text from a file (i.e. a file conteining the text of
  * an SMS message)
  */
-@AutoService(Pipe.class)
+@AutoService(AbstractPipe.class)
 @TransformationPipe
-public class File2StringPipe extends Pipe {
+public class File2StringPipe extends AbstractPipe {
     /**
      * A logger for logging purposes
      */
@@ -53,7 +53,7 @@ public class File2StringPipe extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      * @param carrier The instance to pipe
      */
     @Override

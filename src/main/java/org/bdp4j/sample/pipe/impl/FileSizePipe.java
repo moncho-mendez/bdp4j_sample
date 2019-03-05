@@ -1,7 +1,7 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.PropertyComputingPipe;
 import org.bdp4j.types.Instance;
@@ -11,9 +11,9 @@ import java.io.File;
 /**
  * A pipe able to compute the size of a file
  */
-@AutoService(Pipe.class)
+@AutoService(AbstractPipe.class)
 @PropertyComputingPipe
-public class FileSizePipe extends Pipe {
+public class FileSizePipe extends AbstractPipe {
     /**
      * The name of the deafult propety to store the filesize
      */
@@ -74,7 +74,7 @@ public class FileSizePipe extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      * @param carrier The instance to pipe
      */
     @Override

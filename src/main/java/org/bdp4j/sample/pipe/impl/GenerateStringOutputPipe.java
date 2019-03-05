@@ -3,7 +3,7 @@ package org.bdp4j.sample.pipe.impl;
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
 import org.bdp4j.types.Instance;
@@ -15,9 +15,9 @@ import java.io.PrintWriter;
  * A pipe able to measure the length of a string and create the corresponding
  * property
  */
-@AutoService(Pipe.class)
+@AutoService(AbstractPipe.class)
 @TeePipe
-public class GenerateStringOutputPipe extends Pipe {
+public class GenerateStringOutputPipe extends AbstractPipe {
     /**
      * A logger for logging purposes
      */
@@ -106,7 +106,7 @@ public class GenerateStringOutputPipe extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      *
      * @param carrier The instance to pipe
      */

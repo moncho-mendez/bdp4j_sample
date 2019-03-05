@@ -1,8 +1,7 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
-
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TransformationPipe;
 import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.sample.types.TokenArray;
@@ -12,9 +11,9 @@ import org.bdp4j.types.Instance;
  * Build a FeatureVector from a TokenArray
  * @author José Ramón Méndez Reboredo
  */
-@AutoService(Pipe.class)
+@AutoService(AbstractPipe.class)
 @TransformationPipe
-public class TokenArray2FeatureVector extends Pipe {
+public class TokenArray2FeatureVector extends AbstractPipe {
 
     /**
      * The generic constructor
@@ -41,7 +40,7 @@ public class TokenArray2FeatureVector extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      * @param carrier the instance to pipe
      * @return the piped instance
      */

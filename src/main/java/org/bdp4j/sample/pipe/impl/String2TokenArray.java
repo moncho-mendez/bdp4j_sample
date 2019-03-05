@@ -1,19 +1,18 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
-
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TransformationPipe;
 import org.bdp4j.sample.types.TokenArray;
 import org.bdp4j.types.Instance;
 
 /**
- * Pipe to tokenize a string included in the data of the instance
+ * AbstractPipe to tokenize a string included in the data of the instance
  * @author José Ramón Méndez
  */
 @TransformationPipe
-@AutoService(Pipe.class)
-public class String2TokenArray extends Pipe {
+@AutoService(AbstractPipe.class)
+public class String2TokenArray extends AbstractPipe {
     /**
      * The generic constructor
      */
@@ -44,7 +43,7 @@ public class String2TokenArray extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      * @param carrier the instance to pipe
      * @return the piped instance
      */    

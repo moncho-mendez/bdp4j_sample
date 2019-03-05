@@ -1,7 +1,7 @@
 package org.bdp4j.sample;
 
 import org.bdp4j.ml.DatasetFromFile;
-import org.bdp4j.pipe.Pipe;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.SerialPipes;
 import org.bdp4j.sample.pipe.impl.*;
 import org.bdp4j.transformers.Enum2IntTransformer;
@@ -32,7 +32,7 @@ public class Main{
         generateInstances("./samples/");
 
         /* Create the prorcessing pipe */
-        Pipe p=new SerialPipes(new Pipe[]{
+        AbstractPipe p = new SerialPipes(new AbstractPipe[]{
             new File2TargetAssignPipe(),
             new FileSizePipe(),
             new File2StringPipe(),
@@ -48,7 +48,7 @@ public class Main{
 
         /* Check dependencies */
         if (!p.checkDependencies()) {
-            System.out.println(Pipe.getErrorMessage());
+            System.out.println(AbstractPipe.getErrorMessage());
             System.exit(-1);
         }
  

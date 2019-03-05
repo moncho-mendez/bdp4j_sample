@@ -1,29 +1,26 @@
 package org.bdp4j.sample.pipe.impl;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
-import java.util.Iterator;
-
 import com.google.auto.service.AutoService;
-
-import org.bdp4j.pipe.Pipe;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
 import org.bdp4j.sample.types.Dictionary;
 import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.types.Instance;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Iterator;
 
 /**
  * Generate a CSV file from a Feature Vector
  * @author José Ramón Méndez Reboredo
  */
 @TeePipe
-@AutoService(Pipe.class)
-public class GenerateFeatureVectorOutputPipe extends Pipe {
+@AutoService(AbstractPipe.class)
+public class GenerateFeatureVectorOutputPipe extends AbstractPipe {
     /**
      * A logger for logging purposes
      */
@@ -110,7 +107,7 @@ public class GenerateFeatureVectorOutputPipe extends Pipe {
     }
 
     /**
-     * Pipe the instance
+     * AbstractPipe the instance
      * @param carrier the instance to pipe
      * @return the piped instance
      */
