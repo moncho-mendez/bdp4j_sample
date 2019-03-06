@@ -7,6 +7,8 @@ import org.bdp4j.sample.pipe.impl.*;
 import org.bdp4j.transformers.Enum2IntTransformer;
 import org.bdp4j.types.Instance;
 import org.bdp4j.types.Transformer;
+import org.bdp4j.util.InstanceListUtils;
+
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
@@ -54,6 +56,9 @@ public class Main{
  
         /* Process instances */
         p.pipeAll(carriers);
+
+        /* Drop instances invalidated through piping process */
+        carriers=InstanceListUtils.dropInvalid(carriers);
 
         //Then load the dataset to use it with Weka TM
         Map<String, Integer> targetValues = new HashMap<>();
