@@ -1,6 +1,27 @@
+/*
+ * BDP4J-sample implements a list of BDP4J (https://github.com/sing-group/bdp4j) 
+ * tasks (org.bdp4j.pipe.Pipe). These tasks implement common text preprocessing 
+ * stages and can be easilly combined to create a BDP4J pipeline for preprocessig 
+ * a set of ham/spam SMS messages downloaded from http://www.esp.uem.es/jmgomez/smsspamcorpus/
+ *
+ * Copyright (C) 2018  Sing Group (University of Vigo)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.bdp4j.sample;
 
-import org.bdp4j.ml.DatasetFromFile;
+import org.bdp4j.dataset.DatasetFromFile;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.SerialPipes;
 import org.bdp4j.sample.pipe.impl.*;
@@ -23,11 +44,12 @@ import java.util.*;
 /**
  * Test pipe functioanlity
  */
-public class Main{
+public class Main {
+
     /**
      * List of instances to process
      */
-    static List<Instance> carriers=new ArrayList<>();
+    static List<Instance> carriers = new ArrayList<>();
 
     public static void main(String[] args) {
         /* Load instances */
@@ -43,22 +65,22 @@ public class Main{
             new String2TokenArray(),
             new TokenArray2FeatureVector(),
             new GenerateFeatureVectorOutputPipe()
-           }
+        }
         );
 
-        System.out.println("The Pipeline used is"+p);
+        System.out.println("The Pipeline used is" + p);
 
         /* Check dependencies */
         if (!p.checkDependencies()) {
             System.out.println(AbstractPipe.getErrorMessage());
             System.exit(-1);
         }
- 
+
         /* Process instances */
         p.pipeAll(carriers);
 
         /* Drop instances invalidated through piping process */
-        carriers=InstanceListUtils.dropInvalid(carriers);
+        carriers = InstanceListUtils.dropInvalid(carriers);
 
         //Then load the dataset to use it with Weka TM
         Map<String, Integer> targetValues = new HashMap<>();
@@ -69,8 +91,8 @@ public class Main{
         Map<String, Transformer> transformersList = new HashMap<>();
         transformersList.put("target", new Enum2IntTransformer(targetValues));
 
-        Instances data = (new DatasetFromFile(GenerateStringOutputPipe.DEFAULT_FILE,transformersList)).loadFile().getWekaDataset();
-        
+        Instances data = (new DatasetFromFile(GenerateStringOutputPipe.DEFAULT_FILE, transformersList)).loadFile().getWekaDataset();
+
         data.deleteStringAttributes();
         data.setClassIndex(data.numAttributes() - 1);
         System.out.println("Instance no: " + data.numInstances());
@@ -91,7 +113,7 @@ public class Main{
             System.out.println(">> FN: " + nvEvaluation.confusionMatrix()[1][0]);
             System.out.println(">> TP: " + nvEvaluation.confusionMatrix()[1][1]);
         } catch (Exception ex) {
-            System.out.println("Error executing Naïve Bayes: "+ex.getMessage());
+            System.out.println("Error executing Naïve Bayes: " + ex.getMessage());
             ex.printStackTrace();
         }
 
@@ -118,6 +140,7 @@ public class Main{
      * detected.
      */
     static class FileMng {
+
         /**
          * Include a filne in the instancelist
          *
@@ -131,5 +154,5 @@ public class Main{
 
             carriers.add(new Instance(data, target, name, source));
         }
-    }    
+    }
 }

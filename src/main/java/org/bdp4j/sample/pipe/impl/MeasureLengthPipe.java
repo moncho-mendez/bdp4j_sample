@@ -1,3 +1,24 @@
+/*
+ * BDP4J-sample implements a list of BDP4J (https://github.com/sing-group/bdp4j) 
+ * tasks (org.bdp4j.pipe.Pipe). These tasks implement common text preprocessing 
+ * stages and can be easilly combined to create a BDP4J pipeline for preprocessig 
+ * a set of ham/spam SMS messages downloaded from http://www.esp.uem.es/jmgomez/smsspamcorpus/
+ *
+ * Copyright (C) 2018  Sing Group (University of Vigo)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
@@ -7,12 +28,13 @@ import org.bdp4j.pipe.PropertyComputingPipe;
 import org.bdp4j.types.Instance;
 
 /**
- * A pipe able to measure the length of a string and create the
- * corresponding property
+ * A pipe able to measure the length of a string and create the corresponding
+ * property
  */
 @AutoService(AbstractPipe.class)
 @PropertyComputingPipe
 public class MeasureLengthPipe extends AbstractPipe {
+
     /**
      * The name of the property to store the length of a string
      */
@@ -40,7 +62,7 @@ public class MeasureLengthPipe extends AbstractPipe {
      */
     public MeasureLengthPipe(String propName) {
         /* Must declare here the dependencies */
-        /*     alwaysBefore     notAfter */
+ /*     alwaysBefore     notAfter */
         super(new Class<?>[0], new Class<?>[0]);
 
         this.propName = propName;

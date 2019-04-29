@@ -1,3 +1,24 @@
+/*
+ * BDP4J-sample implements a list of BDP4J (https://github.com/sing-group/bdp4j) 
+ * tasks (org.bdp4j.pipe.Pipe). These tasks implement common text preprocessing 
+ * stages and can be easilly combined to create a BDP4J pipeline for preprocessig 
+ * a set of ham/spam SMS messages downloaded from http://www.esp.uem.es/jmgomez/smsspamcorpus/
+ *
+ * Copyright (C) 2018  Sing Group (University of Vigo)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.bdp4j.sample.types;
 
 import java.util.Base64;
@@ -11,9 +32,10 @@ import java.util.Base64.Encoder;
  * @author José Ramón Méndez
  */
 public class Dictionary implements Iterable<String> {
+
     /**
-     * The information storage for the dictionary. Only a Hashset of entries
-     * is required
+     * The information storage for the dictionary. Only a Hashset of entries is
+     * required
      */
     private LinkedHashSet<String> entries;
 
@@ -73,13 +95,14 @@ public class Dictionary implements Iterable<String> {
 
     /**
      * Return a list of CSV entries
+     *
      * @return list of CSVEntries
      */
-    public String toBase64CSV(){
-        StringBuilder retVal=new StringBuilder();
-        Encoder b64encoder=Base64.getEncoder();
-        for (String entry:entries){
-            String encoded=new String(b64encoder.encode(entry.getBytes()));
+    public String toBase64CSV() {
+        StringBuilder retVal = new StringBuilder();
+        Encoder b64encoder = Base64.getEncoder();
+        for (String entry : entries) {
+            String encoded = new String(b64encoder.encode(entry.getBytes()));
             retVal.append(encoded + ";");
         }
         return retVal.toString();
