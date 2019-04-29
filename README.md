@@ -1,5 +1,5 @@
 # bdp4j_sample
-BPP4J (Big Data Preprocessing for Java) example
+BPP4J (Big Data Preprocessing for Java, https://github.com/sing-group/bdp4j) example
 
 This repository contains an example of use can be found to process SMS messages from http://www.esp.uem.es/jmgomez/smsspamcorpus/ 
 a make a simple Weka 10-fold crosvalidation experiment. It is very simple but you can find in the example several pipes of different pipes working 
