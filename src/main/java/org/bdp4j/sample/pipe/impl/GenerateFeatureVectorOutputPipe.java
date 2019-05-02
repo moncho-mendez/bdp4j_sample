@@ -30,9 +30,11 @@ import org.bdp4j.pipe.SharedDataConsumer;
 import org.bdp4j.sample.types.Dictionary;
 import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.types.Instance;
+import org.bdp4j.util.CSVDataset;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -60,14 +62,9 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     String outFile = null;
 
     /**
-     * Marks if the file has been opened
+     * Csv DAtaset to store data
      */
-    boolean fileOpened = false;
-
-    /**
-     * The output printWriter
-     */
-    PrintWriter out;
+    CSVDataset dataset=null;
 
     /**
      * Default consturctor
@@ -90,6 +87,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         super(new Class<?>[0], new Class<?>[0]);
 
         this.outFile = outFile;
+        this.dataset=new CSVDataset(outFile);        
     }
 
     /**
@@ -110,7 +108,10 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
      */
     @PipeParameter(name = "outFile", description = "The file to store the CSV representation of instances", defaultValue = DEFAULT_FILE)
     public void setOutFile(String outFile) {
+        this.dataset.flushAndClose();
         this.outFile = outFile;
+        
+        this.dataset=new CSVDataset(outFile);
     }
 
     /**
@@ -133,6 +134,15 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         return FeatureVector.class;
     }
 
+    private static boolean contains(String[] arr, String targetValue) {
+        for(String s: arr){
+            if(s.equals(targetValue))
+                return true;
+        }
+        return false;
+    }
+
+
     /**
      * AbstractPipe the instance
      *
@@ -141,40 +151,56 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
      */
     @Override
     public Instance pipe(Instance carrier) {
-        FeatureVector fv = (FeatureVector) (carrier.getData());
-        if (!fileOpened) {
-            try {
-                out = new PrintWriter(outFile);
-                out.append("id;");
-                out.append(Dictionary.getDictionary().toBase64CSV());
-                for (String i : carrier.getPropertyList()) {
-                    out.append(i + ";");
-                }
-                out.append("target\n");
-            } catch (FileNotFoundException e) {
-                logger.fatal(e);
-                e.printStackTrace();
-                System.exit(0);
-            }
-            fileOpened = true;
-        }
+        //Ensure the columns of the dataset fits with the instance
+        if (dataset.getColumnCount()==0){
+            dataset.addColumn("id", "0");
+            dataset.addColumn("content", "0");
 
-        out.append(carrier.getName() + ";");
+            for (String i : carrier.getPropertyList()) {
+                this.dataset.addColumn(i, "0");
+            }
+
+            Iterator<String> it= Dictionary.getDictionary().iterator();
+            while (it.hasNext()){
+                String dictEntry=it.next();
+                dataset.addColumn(dictEntry, "0"); //TODO:insert and not add
+            }
+
+            dataset.addColumn("target\n", "");
+        }else if (dataset.getColumnCount()!=(Dictionary.getDictionary().size()+carrier.getPropertyList().size()+3)){
+            String currentProps[]=dataset.getColumnNames();
+
+            for (String prop:carrier.getPropertyList())
+                if (!contains(currentProps, prop)) dataset.addColumn(prop, "0"); //TODO:insert and not add
+            
+            Iterator<String> it= Dictionary.getDictionary().iterator();
+            while (it.hasNext()){
+                String dictEntry=it.next();
+                if (!contains(currentProps, dictEntry)) dataset.addColumn(dictEntry, "0"); //TODO:insert and not add
+            }
+        }
+        
+        //Create and add the new row
+        Object newRow[]=new Object[Dictionary.getDictionary().size()+carrier.getPropertyList().size()+3];
+        newRow[0]=carrier.getName();
+        newRow[1]=carrier.getData();
+        int i=2;
+        for (Object current : carrier.getValueList()) {
+            newRow[i]=current;
+            i++;
+        }
         Iterator<String> it = Dictionary.getDictionary().iterator();
         while (it.hasNext()) {
-            String current = it.next();
-            out.append(fv.getValue(current) + ";");
-        }
+            newRow[i]=it.next();
 
-        for (Object i : carrier.getValueList()) {
-            out.append(i.toString() + ";");
+            i++;
         }
-        out.append(carrier.getTarget().toString() + "\n");
-
-        if (isLast() && fileOpened) {
-            out.close();
+        newRow[newRow.length-1]=carrier.getTarget();
+        dataset.addRow(newRow);
+        //If islast on the current burst close the dataset
+        if (isLast()) {
+            dataset.flushAndClose();
         }
-
         return carrier;
     }
 

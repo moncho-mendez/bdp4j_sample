@@ -107,4 +107,12 @@ public class Dictionary implements Iterable<String> {
         }
         return retVal.toString();
     }
+
+    /**
+     * Returns the size of the dictionary
+     * @return the size of the dictionary
+     */
+    public int size(){
+        return entries.size();
+    }
 }
