@@ -21,6 +21,7 @@
  */
 package org.bdp4j.sample.pipe.impl;
 
+import java.io.File;
 import java.util.Arrays;
 
 import com.google.auto.service.AutoService;
@@ -82,6 +83,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
         super(new Class<?>[0], new Class<?>[0]);
 
         this.outFile = outFile;
+        File f=new File(outFile); if (f.exists()) f.delete();
         this.dataset=new CSVDataset(outFile);
     }
 
@@ -105,7 +107,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
     public void setOutFile(String outFile) {
         this.dataset.flushAndClose();
         this.outFile = outFile;
-        
+        File f=new File(outFile); if (f.exists()) f.delete();
         this.dataset=new CSVDataset(outFile);
     }
 
@@ -158,7 +160,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
             String currentProps[]=dataset.getColumnNames();
             for (String prop:carrier.getPropertyList())
             
-                if (!contains(currentProps, prop)) dataset.addColumn(prop, "0"); //TODO:insert and not add
+                if (!contains(currentProps, prop)) dataset.insertColumnAt(prop, "0", dataset.getColumnCount()-2);
         }
         
         //Create and add the new row

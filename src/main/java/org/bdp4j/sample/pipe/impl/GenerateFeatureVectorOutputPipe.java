@@ -32,9 +32,7 @@ import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.types.Instance;
 import org.bdp4j.util.CSVDataset;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Arrays;
+import java.io.File;
 import java.util.Iterator;
 
 /**
@@ -67,6 +65,16 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     CSVDataset dataset=null;
 
     /**
+     * Number of properties
+     */
+    int nprops=0;
+
+    /**
+     * Length of the dictionary
+     */
+    int dictLength=0;
+
+    /**
      * Default consturctor
      */
     public GenerateFeatureVectorOutputPipe() {
@@ -87,6 +95,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         super(new Class<?>[0], new Class<?>[0]);
 
         this.outFile = outFile;
+        File f=new File(outFile); if (f.exists()) f.delete();
         this.dataset=new CSVDataset(outFile);        
     }
 
@@ -110,6 +119,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     public void setOutFile(String outFile) {
         this.dataset.flushAndClose();
         this.outFile = outFile;
+        File f=new File(outFile); if (f.exists()) f.delete();
         
         this.dataset=new CSVDataset(outFile);
     }
@@ -151,6 +161,8 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
      */
     @Override
     public Instance pipe(Instance carrier) {
+        FeatureVector fv=(FeatureVector)carrier.getData();
+
         //Ensure the columns of the dataset fits with the instance
         if (dataset.getColumnCount()==0){
             dataset.addColumn("id", "0");
@@ -163,20 +175,23 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
             Iterator<String> it= Dictionary.getDictionary().iterator();
             while (it.hasNext()){
                 String dictEntry=it.next();
-                dataset.addColumn(dictEntry, "0"); //TODO:insert and not add
+                dataset.addColumn(dictEntry, "0");
             }
 
             dataset.addColumn("target\n", "");
+            nprops=carrier.getPropertyList().size();
+            dictLength=Dictionary.getDictionary().size();
         }else if (dataset.getColumnCount()!=(Dictionary.getDictionary().size()+carrier.getPropertyList().size()+3)){
             String currentProps[]=dataset.getColumnNames();
 
             for (String prop:carrier.getPropertyList())
-                if (!contains(currentProps, prop)) dataset.addColumn(prop, "0"); //TODO:insert and not add
+                if (!contains(currentProps, prop)) { dataset.insertColumnAt(prop, "0",nprops+1); nprops++;}
             
             Iterator<String> it= Dictionary.getDictionary().iterator();
             while (it.hasNext()){
                 String dictEntry=it.next();
-                if (!contains(currentProps, dictEntry)) dataset.addColumn(dictEntry, "0"); //TODO:insert and not add
+                if (!contains(currentProps, dictEntry)){ dataset.insertColumnAt(dictEntry, "0",1+nprops+dictLength); dictLength++; }
+
             }
         }
         
@@ -191,12 +206,12 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         }
         Iterator<String> it = Dictionary.getDictionary().iterator();
         while (it.hasNext()) {
-            newRow[i]=it.next();
-
+            newRow[i]=fv.getValue(it.next());
             i++;
         }
         newRow[newRow.length-1]=carrier.getTarget();
         dataset.addRow(newRow);
+
         //If islast on the current burst close the dataset
         if (isLast()) {
             dataset.flushAndClose();
