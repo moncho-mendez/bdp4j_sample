@@ -33,6 +33,7 @@ import org.bdp4j.types.Instance;
 import org.bdp4j.util.CSVDataset;
 
 import java.io.File;
+import java.util.Base64;
 import java.util.Iterator;
 
 /**
@@ -96,7 +97,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
 
         this.outFile = outFile;
         File f=new File(outFile); if (f.exists()) f.delete();
-        this.dataset=new CSVDataset(outFile);        
+        this.dataset=new CSVDataset(outFile);
     }
 
     /**
@@ -152,6 +153,9 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         return false;
     }
 
+    private String encodeFeat(String feat){
+        return Base64.getEncoder().encodeToString(feat.getBytes()); 
+    }
 
     /**
      * AbstractPipe the instance
@@ -165,41 +169,59 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
 
         //Ensure the columns of the dataset fits with the instance
         if (dataset.getColumnCount()==0){
-            dataset.addColumn("id", "0");
-            dataset.addColumn("content", "0");
-
-            for (String i : carrier.getPropertyList()) {
-                this.dataset.addColumn(i, "0");
-            }
-
-            Iterator<String> it= Dictionary.getDictionary().iterator();
-            while (it.hasNext()){
-                String dictEntry=it.next();
-                dataset.addColumn(dictEntry, "0");
-            }
-
-            dataset.addColumn("target\n", "");
             nprops=carrier.getPropertyList().size();
             dictLength=Dictionary.getDictionary().size();
-        }else if (dataset.getColumnCount()!=(Dictionary.getDictionary().size()+carrier.getPropertyList().size()+3)){
-            String currentProps[]=dataset.getColumnNames();
 
-            for (String prop:carrier.getPropertyList())
-                if (!contains(currentProps, prop)) { dataset.insertColumnAt(prop, "0",nprops+1); nprops++;}
-            
+            String columnsToAdd[]=new String[2+nprops+dictLength];
+            Object defaultValues[]=new Object[2+nprops+dictLength];
+            columnsToAdd[0]="id"; defaultValues[0]="0";
+
+            int j=1;
+            for (String i : carrier.getPropertyList()) {
+                columnsToAdd[j]=i; defaultValues[j]="0";
+                j++;
+            }
+
             Iterator<String> it= Dictionary.getDictionary().iterator();
             while (it.hasNext()){
                 String dictEntry=it.next();
-                if (!contains(currentProps, dictEntry)){ dataset.insertColumnAt(dictEntry, "0",1+nprops+dictLength); dictLength++; }
-
+                columnsToAdd[j]=encodeFeat(dictEntry); defaultValues[j]="0";
+                j++;
             }
+
+            columnsToAdd[j]="target"; defaultValues[j]="";
+            dataset.addColumns(columnsToAdd, defaultValues);
+            
+        }else if (dataset.getColumnCount()!=Dictionary.getDictionary().size()+2+carrier.getPropertyList().size()){
+            String currentProps[]=dataset.getColumnNames();
+            
+            String newProps[]=new String[carrier.getPropertyList().size()-nprops];
+            Object newDefaultValues[]=new Object[carrier.getPropertyList().size()-nprops];
+            int j=0;
+            for (String prop:carrier.getPropertyList())
+                if (!contains(currentProps, prop)) { newProps[j]=prop; newDefaultValues[j]="0"; j++;}
+            dataset.insertColumnsAt(newProps, newDefaultValues,nprops+1);
+            nprops+=newProps.length;
+
+            newProps=new String[Dictionary.getDictionary().size()-dictLength];
+            newDefaultValues=new Object[Dictionary.getDictionary().size()-dictLength];
+            j=0;
+            int currentEntryIdx=0;
+            Iterator<String> it= Dictionary.getDictionary().iterator();
+            while (it.hasNext()){
+                String dictEntry=it.next();
+                if (currentEntryIdx>=dictLength){ newProps[j]=encodeFeat(dictEntry); newDefaultValues[j]="0"; j++; }
+                currentEntryIdx++;
+            }
+
+            dataset.insertColumnsAt(newProps, newDefaultValues, dataset.getColumnCount()-2);
+            dictLength+=newProps.length;
         }
-        
+
         //Create and add the new row
-        Object newRow[]=new Object[Dictionary.getDictionary().size()+carrier.getPropertyList().size()+3];
+        Object newRow[]=new Object[nprops+dictLength+2];
         newRow[0]=carrier.getName();
-        newRow[1]=carrier.getData();
-        int i=2;
+        int i=1;
         for (Object current : carrier.getValueList()) {
             newRow[i]=current;
             i++;
@@ -209,13 +231,14 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
             newRow[i]=fv.getValue(it.next());
             i++;
         }
-        newRow[newRow.length-1]=carrier.getTarget();
+        newRow[i]=carrier.getTarget();
         dataset.addRow(newRow);
 
         //If islast on the current burst close the dataset
         if (isLast()) {
             dataset.flushAndClose();
         }
+
         return carrier;
     }
 

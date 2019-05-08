@@ -34,6 +34,7 @@ import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
 
+import java.awt.SystemTray;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,6 +55,11 @@ public class Main {
     public static void main(String[] args) {
         /* Load instances */
         generateInstances("./samples/");
+
+        List<Instance> burst1, burst2, burst3;
+        burst1=new ArrayList<Instance>(carriers.subList(0, (int)Math.floor(carriers.size()/3)));
+        burst2=new ArrayList<Instance>(carriers.subList((int)Math.floor(carriers.size()/3)+1,(int)Math.floor(carriers.size()/2)));
+        burst3=new ArrayList<Instance>(carriers.subList((int)Math.floor(carriers.size()/2)+1, carriers.size()));
 
         /* Create the prorcessing pipe */
         AbstractPipe p = new SerialPipes(new AbstractPipe[]{
@@ -77,7 +83,10 @@ public class Main {
         }
 
         /* Process instances */
-        p.pipeAll(carriers);
+        //p.pipeAll(carriers);
+        p.pipeAll(burst1);
+        p.pipeAll(burst2);
+        p.pipeAll(burst3);
 
         /* Drop instances invalidated through piping process */
         carriers = InstanceListUtils.dropInvalid(carriers);
@@ -91,7 +100,7 @@ public class Main {
         Map<String, Transformer> transformersList = new HashMap<>();
         transformersList.put("target", new Enum2IntTransformer(targetValues));
 
-        Instances data = (new DatasetFromFile(GenerateStringOutputPipe.DEFAULT_FILE, transformersList)).loadFile().getWekaDataset();
+        Instances data = (new DatasetFromFile(GenerateFeatureVectorOutputPipe.DEFAULT_FILE, transformersList)).loadFile().getWekaDataset();
 
         data.deleteStringAttributes();
         data.setClassIndex(data.numAttributes() - 1);

@@ -22,7 +22,6 @@
 package org.bdp4j.sample.pipe.impl;
 
 import java.io.File;
-import java.util.Arrays;
 
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
@@ -148,18 +147,26 @@ public class GenerateStringOutputPipe extends AbstractPipe {
     public Instance pipe(Instance carrier) {
         //Ensure the columns of the dataset fits with the instance
         if (dataset.getColumnCount()==0){
-            dataset.addColumn("id", "0");
-            dataset.addColumn("content", "0");
+            String columnsToAdd[]=new String[3+carrier.getPropertyList().size()];
+            Object defaultValues[]=new Object[3+carrier.getPropertyList().size()];
+            columnsToAdd[0]="id";defaultValues[0]="0";
+            columnsToAdd[1]="content";defaultValues[0]="";
+            int j=2;
+
+            //dataset.addColumn("id", "0");
+            //dataset.addColumn("content", "0");
 
             for (String i : carrier.getPropertyList()) {
-                this.dataset.addColumn(i, "0");
+                columnsToAdd[j]=i;defaultValues[j]="";
+                //this.dataset.addColumn(i, "0");
+                j++;
             }
 
-            dataset.addColumn("target\n", "");
+            columnsToAdd[j]="target";defaultValues[j]="";
+            dataset.addColumns(columnsToAdd,defaultValues);
         }else if (dataset.getColumnCount()!=(carrier.getPropertyList().size()+3)){
             String currentProps[]=dataset.getColumnNames();
             for (String prop:carrier.getPropertyList())
-            
                 if (!contains(currentProps, prop)) dataset.insertColumnAt(prop, "0", dataset.getColumnCount()-2);
         }
         
