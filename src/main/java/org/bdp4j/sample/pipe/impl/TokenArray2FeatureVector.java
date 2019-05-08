@@ -25,6 +25,7 @@ import com.google.auto.service.AutoService;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TransformationPipe;
 import org.bdp4j.pipe.SharedDataProducer;
+import org.bdp4j.sample.types.Dictionary;
 import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.sample.types.TokenArray;
 import org.bdp4j.types.Instance;
@@ -78,7 +79,8 @@ public class TokenArray2FeatureVector extends AbstractPipe implements SharedData
 
     @Override
     public void writeToDisk(String filename) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Dictionary.getDictionary().writeToDisk(filename);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

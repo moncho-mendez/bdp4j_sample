@@ -244,7 +244,8 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
 
     @Override
     public void readFromDisk(String filename) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Dictionary.getDictionary().readFromDisk(filename);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

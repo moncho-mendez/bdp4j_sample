@@ -21,10 +21,20 @@
  */
 package org.bdp4j.sample.types;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Base64.Encoder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A generic dictionary to store any kind of string entries
@@ -32,6 +42,10 @@ import java.util.Base64.Encoder;
  * @author José Ramón Méndez
  */
 public class Dictionary implements Iterable<String> {
+    /**
+     * A logger for logging purposes
+     */
+    private static final Logger logger = LogManager.getLogger(Dictionary.class);
 
     /**
      * The information storage for the dictionary. Only a Hashset of entries is
@@ -115,4 +129,39 @@ public class Dictionary implements Iterable<String> {
     public int size(){
         return entries.size();
     }
+
+    /**
+     * Save data to a file
+     *
+     * @param filename File name where the data is saved
+     */
+    public void writeToDisk(String filename) {
+        try (FileOutputStream outputFile = new FileOutputStream(filename);
+                BufferedOutputStream buffer = new BufferedOutputStream(outputFile);
+                ObjectOutputStream output = new ObjectOutputStream(buffer);) {
+                output.writeObject(this.entries);
+            
+            output.flush();
+            output.close();
+        } catch (Exception ex) {
+            logger.error("[WRITE TO DISK] " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Retrieve data from file
+     *
+     * @param filename File name to retrieve data
+     */
+    public void readFromDisk(String filename) {
+        File file = new File(filename);
+        try (BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(file))) {
+            ObjectInputStream input = new ObjectInputStream(buffer);
+            this.entries = (LinkedHashSet<String>) input.readObject();
+
+        } catch (Exception ex) {
+            logger.error("[READ FROM DISK] " + ex.getMessage());
+        }
+    }
+
 }
