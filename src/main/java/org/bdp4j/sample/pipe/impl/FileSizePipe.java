@@ -22,6 +22,7 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.PropertyComputingPipe;
@@ -32,7 +33,7 @@ import java.io.File;
 /**
  * A pipe able to compute the size of a file
  */
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 @PropertyComputingPipe
 public class FileSizePipe extends AbstractPipe {
 

@@ -24,6 +24,7 @@ package org.bdp4j.sample.pipe.impl;
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TargetAssigningPipe;
 import org.bdp4j.types.Instance;
@@ -37,7 +38,7 @@ import java.nio.file.Paths;
 /**
  * A pipe able to find the target for the SMS representation
  */
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 @TargetAssigningPipe
 public class File2TargetAssignPipe extends AbstractPipe {
 

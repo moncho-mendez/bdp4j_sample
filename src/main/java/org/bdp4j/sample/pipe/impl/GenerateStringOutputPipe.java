@@ -26,6 +26,7 @@ import java.io.File;
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
@@ -37,7 +38,7 @@ import org.bdp4j.util.CSVDataset;
  * A pipe able to measure the length of a string and create the corresponding
  * property
  */
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 @TeePipe
 public class GenerateStringOutputPipe extends AbstractPipe {
 

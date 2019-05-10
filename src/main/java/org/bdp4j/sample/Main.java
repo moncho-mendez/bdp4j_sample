@@ -90,6 +90,7 @@ public class Main {
 
         /* Drop instances invalidated through piping process */
         carriers = InstanceListUtils.dropInvalid(carriers);
+        System.out.println("Instances were processed.");
 
         //Then load the dataset to use it with Weka TM
         Map<String, Integer> targetValues = new HashMap<>();

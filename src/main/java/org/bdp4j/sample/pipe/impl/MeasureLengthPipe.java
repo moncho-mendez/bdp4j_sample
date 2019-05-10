@@ -22,6 +22,7 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.PropertyComputingPipe;
@@ -31,7 +32,7 @@ import org.bdp4j.types.Instance;
  * A pipe able to measure the length of a string and create the corresponding
  * property
  */
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 @PropertyComputingPipe
 public class MeasureLengthPipe extends AbstractPipe {
 

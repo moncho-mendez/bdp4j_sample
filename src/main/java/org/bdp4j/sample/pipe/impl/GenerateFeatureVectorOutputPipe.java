@@ -23,6 +23,7 @@ package org.bdp4j.sample.pipe.impl;
 import com.google.auto.service.AutoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
@@ -42,7 +43,7 @@ import java.util.Iterator;
  * @author José Ramón Méndez Reboredo
  */
 @TeePipe
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements SharedDataConsumer {
 
     /**

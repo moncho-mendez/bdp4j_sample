@@ -22,6 +22,7 @@
 package org.bdp4j.sample.pipe.impl;
 
 import com.google.auto.service.AutoService;
+import org.bdp4j.pipe.Pipe;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.TransformationPipe;
 import org.bdp4j.pipe.SharedDataProducer;
@@ -35,7 +36,7 @@ import org.bdp4j.types.Instance;
  *
  * @author José Ramón Méndez Reboredo
  */
-@AutoService(AbstractPipe.class)
+@AutoService(Pipe.class)
 @TransformationPipe
 public class TokenArray2FeatureVector extends AbstractPipe implements SharedDataProducer {
 
