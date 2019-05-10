@@ -167,7 +167,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
         }else if (dataset.getColumnCount()!=(carrier.getPropertyList().size()+3)){
             String currentProps[]=dataset.getColumnNames();
             for (String prop:carrier.getPropertyList())
-                if (!contains(currentProps, prop)) dataset.insertColumnAt(prop, "0", dataset.getColumnCount()-2);
+                if (!contains(currentProps, prop)) dataset.insertColumnAt(prop, "0", dataset.getColumnCount()-1);
         }
         
         //Create and add the new row

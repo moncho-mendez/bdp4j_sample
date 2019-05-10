@@ -214,7 +214,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
                 currentEntryIdx++;
             }
 
-            dataset.insertColumnsAt(newProps, newDefaultValues, dataset.getColumnCount()-2);
+            dataset.insertColumnsAt(newProps, newDefaultValues, dataset.getColumnCount()-1);
             dictLength+=newProps.length;
         }
 
