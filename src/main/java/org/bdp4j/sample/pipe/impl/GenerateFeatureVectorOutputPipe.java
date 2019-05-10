@@ -31,7 +31,7 @@ import org.bdp4j.pipe.SharedDataConsumer;
 import org.bdp4j.sample.types.Dictionary;
 import org.bdp4j.sample.types.FeatureVector;
 import org.bdp4j.types.Instance;
-import org.bdp4j.util.CSVDataset;
+import org.bdp4j.util.CSVDatasetWriter;
 
 import java.io.File;
 import java.util.Base64;
@@ -64,7 +64,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     /**
      * Csv DAtaset to store data
      */
-    CSVDataset dataset=null;
+    CSVDatasetWriter dataset=null;
 
     /**
      * Number of properties
@@ -98,7 +98,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
 
         this.outFile = outFile;
         File f=new File(outFile); if (f.exists()) f.delete();
-        this.dataset=new CSVDataset(outFile);
+        this.dataset=new CSVDatasetWriter(outFile);
     }
 
     /**
@@ -123,7 +123,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         this.outFile = outFile;
         File f=new File(outFile); if (f.exists()) f.delete();
         
-        this.dataset=new CSVDataset(outFile);
+        this.dataset=new CSVDatasetWriter(outFile);
     }
 
     /**

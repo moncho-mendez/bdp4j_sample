@@ -32,7 +32,7 @@ import org.bdp4j.pipe.PipeParameter;
 import org.bdp4j.pipe.TeePipe;
 import org.bdp4j.types.Instance;
 
-import org.bdp4j.util.CSVDataset;
+import org.bdp4j.util.CSVDatasetWriter;
 
 /**
  * A pipe able to measure the length of a string and create the corresponding
@@ -60,7 +60,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
     /**
      * Csv DAtaset to store data
      */
-    CSVDataset dataset=null;
+    CSVDatasetWriter dataset=null;
 
     /**
      * Default consturctor
@@ -84,7 +84,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
 
         this.outFile = outFile;
         File f=new File(outFile); if (f.exists()) f.delete();
-        this.dataset=new CSVDataset(outFile);
+        this.dataset=new CSVDatasetWriter(outFile);
     }
 
     /**
@@ -108,7 +108,7 @@ public class GenerateStringOutputPipe extends AbstractPipe {
         this.dataset.flushAndClose();
         this.outFile = outFile;
         File f=new File(outFile); if (f.exists()) f.delete();
-        this.dataset=new CSVDataset(outFile);
+        this.dataset=new CSVDatasetWriter(outFile);
     }
 
     /**
