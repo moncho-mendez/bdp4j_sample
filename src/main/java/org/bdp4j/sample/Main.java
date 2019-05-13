@@ -1,7 +1,7 @@
 /*
- * BDP4J-sample implements a list of BDP4J (https://github.com/sing-group/bdp4j) 
- * tasks (org.bdp4j.pipe.Pipe). These tasks implement common text preprocessing 
- * stages and can be easilly combined to create a BDP4J pipeline for preprocessig 
+ * BDP4J-sample implements a list of BDP4J (https://github.com/sing-group/bdp4j)
+ * tasks (org.bdp4j.pipe.Pipe). These tasks implement common text preprocessing
+ * stages and can be easilly combined to create a BDP4J pipeline for preprocessig
  * a set of ham/spam SMS messages downloaded from http://www.esp.uem.es/jmgomez/smsspamcorpus/
  *
  * Copyright (C) 2018  Sing Group (University of Vigo)
@@ -21,7 +21,7 @@
  */
 package org.bdp4j.sample;
 
-import org.bdp4j.dataset.DatasetFromFile;
+import org.bdp4j.dataset.CSVDatasetReader;
 import org.bdp4j.pipe.AbstractPipe;
 import org.bdp4j.pipe.SerialPipes;
 import org.bdp4j.sample.pipe.impl.*;
@@ -29,12 +29,10 @@ import org.bdp4j.transformers.Enum2IntTransformer;
 import org.bdp4j.types.Instance;
 import org.bdp4j.types.Transformer;
 import org.bdp4j.util.InstanceListUtils;
-
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instances;
 
-import java.awt.SystemTray;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,20 +55,20 @@ public class Main {
         generateInstances("./samples/");
 
         List<Instance> burst1, burst2, burst3;
-        burst1=new ArrayList<Instance>(carriers.subList(0, (int)Math.floor(carriers.size()/3)));
-        burst2=new ArrayList<Instance>(carriers.subList((int)Math.floor(carriers.size()/3)+1,(int)Math.floor(carriers.size()/2)));
-        burst3=new ArrayList<Instance>(carriers.subList((int)Math.floor(carriers.size()/2)+1, carriers.size()));
+        burst1 = new ArrayList<Instance>(carriers.subList(0, (int) Math.floor(carriers.size() / 3)));
+        burst2 = new ArrayList<Instance>(carriers.subList((int) Math.floor(carriers.size() / 3) + 1, (int) Math.floor(carriers.size() / 2)));
+        burst3 = new ArrayList<Instance>(carriers.subList((int) Math.floor(carriers.size() / 2) + 1, carriers.size()));
 
         /* Create the prorcessing pipe */
         AbstractPipe p = new SerialPipes(new AbstractPipe[]{
-            new File2TargetAssignPipe(),
-            new FileSizePipe(),
-            new File2StringPipe(),
-            new MeasureLengthPipe(),
-            new GenerateStringOutputPipe(),
-            new String2TokenArray(),
-            new TokenArray2FeatureVector(),
-            new GenerateFeatureVectorOutputPipe()
+                new File2TargetAssignPipe(),
+                new FileSizePipe(),
+                new File2StringPipe(),
+                new MeasureLengthPipe(),
+                new GenerateStringOutputPipe(),
+                new String2TokenArray(),
+                new TokenArray2FeatureVector(),
+                new GenerateFeatureVectorOutputPipe()
         }
         );
 
@@ -101,7 +99,7 @@ public class Main {
         Map<String, Transformer> transformersList = new HashMap<>();
         transformersList.put("target", new Enum2IntTransformer(targetValues));
 
-        Instances data = (new DatasetFromFile(GenerateFeatureVectorOutputPipe.DEFAULT_FILE, transformersList)).loadFile().getWekaDataset();
+        Instances data = (new CSVDatasetReader(GenerateFeatureVectorOutputPipe.DEFAULT_FILE, transformersList)).loadFile().getWekaDataset();
 
         data.deleteStringAttributes();
         data.setClassIndex(data.numAttributes() - 1);
