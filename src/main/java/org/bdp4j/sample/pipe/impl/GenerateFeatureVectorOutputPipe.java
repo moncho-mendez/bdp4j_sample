@@ -244,8 +244,8 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     }
 
     @Override
-    public void readFromDisk(String filename) {
-        Dictionary.getDictionary().readFromDisk(filename);
+    public void readFromDisk(String dir) {
+        Dictionary.getDictionary().readFromDisk(dir+System.getProperty("File.separator")+"dictionary.ser");
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
