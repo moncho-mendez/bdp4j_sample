@@ -64,17 +64,17 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     /**
      * Csv DAtaset to store data
      */
-    CSVDatasetWriter dataset=null;
+    CSVDatasetWriter dataset = null;
 
     /**
      * Number of properties
      */
-    int nprops=0;
+    int nprops = 0;
 
     /**
      * Length of the dictionary
      */
-    int dictLength=0;
+    int dictLength = 0;
 
     /**
      * Default consturctor
@@ -97,8 +97,11 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
         super(new Class<?>[0], new Class<?>[0]);
 
         this.outFile = outFile;
-        File f=new File(outFile); if (f.exists()) f.delete();
-        this.dataset=new CSVDatasetWriter(outFile);
+        File f = new File(outFile);
+        if (f.exists()) {
+            f.delete();
+        }
+        this.dataset = new CSVDatasetWriter(outFile);
     }
 
     /**
@@ -121,9 +124,12 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     public void setOutFile(String outFile) {
         this.dataset.flushAndClose();
         this.outFile = outFile;
-        File f=new File(outFile); if (f.exists()) f.delete();
-        
-        this.dataset=new CSVDatasetWriter(outFile);
+        File f = new File(outFile);
+        if (f.exists()) {
+            f.delete();
+        }
+
+        this.dataset = new CSVDatasetWriter(outFile);
     }
 
     /**
@@ -147,15 +153,16 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
     }
 
     private static boolean contains(String[] arr, String targetValue) {
-        for(String s: arr){
-            if(s.equals(targetValue))
+        for (String s : arr) {
+            if (s.equals(targetValue)) {
                 return true;
+            }
         }
         return false;
     }
 
-    private String encodeFeat(String feat){
-        return Base64.getEncoder().encodeToString(feat.getBytes()); 
+    private String encodeFeat(String feat) {
+        return Base64.getEncoder().encodeToString(feat.getBytes());
     }
 
     /**
@@ -166,73 +173,86 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
      */
     @Override
     public Instance pipe(Instance carrier) {
-        FeatureVector fv=(FeatureVector)carrier.getData();
+        FeatureVector fv = (FeatureVector) carrier.getData();
 
         //Ensure the columns of the dataset fits with the instance
-        if (dataset.getColumnCount()==0){
-            nprops=carrier.getPropertyList().size();
-            dictLength=Dictionary.getDictionary().size();
+        if (dataset.getColumnCount() == 0) {
+            nprops = carrier.getPropertyList().size();
+            dictLength = Dictionary.getDictionary().size();
 
-            String columnsToAdd[]=new String[2+nprops+dictLength];
-            Object defaultValues[]=new Object[2+nprops+dictLength];
-            columnsToAdd[0]="id"; defaultValues[0]="0";
+            String columnsToAdd[] = new String[2 + nprops + dictLength];
+            Object defaultValues[] = new Object[2 + nprops + dictLength];
+            columnsToAdd[0] = "id";
+            defaultValues[0] = "0";
 
-            int j=1;
+            int j = 1;
             for (String i : carrier.getPropertyList()) {
-                columnsToAdd[j]=i; defaultValues[j]="0";
+                columnsToAdd[j] = i;
+                defaultValues[j] = "0";
                 j++;
             }
 
-            Iterator<String> it= Dictionary.getDictionary().iterator();
-            while (it.hasNext()){
-                String dictEntry=it.next();
-                columnsToAdd[j]=encodeFeat(dictEntry); defaultValues[j]="0";
+            Iterator<String> it = Dictionary.getDictionary().iterator();
+            while (it.hasNext()) {
+                String dictEntry = it.next();
+                columnsToAdd[j] = encodeFeat(dictEntry);
+                defaultValues[j] = "0";
                 j++;
             }
 
-            columnsToAdd[j]="target"; defaultValues[j]="";
+            columnsToAdd[j] = "target";
+            defaultValues[j] = "";
             dataset.addColumns(columnsToAdd, defaultValues);
-            
-        }else if (dataset.getColumnCount()!=Dictionary.getDictionary().size()+2+carrier.getPropertyList().size()){
-            String currentProps[]=dataset.getColumnNames();
-            
-            String newProps[]=new String[carrier.getPropertyList().size()-nprops];
-            Object newDefaultValues[]=new Object[carrier.getPropertyList().size()-nprops];
-            int j=0;
-            for (String prop:carrier.getPropertyList())
-                if (!contains(currentProps, prop)) { newProps[j]=prop; newDefaultValues[j]="0"; j++;}
-            dataset.insertColumnsAt(newProps, newDefaultValues,nprops+1);
-            nprops+=newProps.length;
 
-            newProps=new String[Dictionary.getDictionary().size()-dictLength];
-            newDefaultValues=new Object[Dictionary.getDictionary().size()-dictLength];
-            j=0;
-            int currentEntryIdx=0;
-            Iterator<String> it= Dictionary.getDictionary().iterator();
-            while (it.hasNext()){
-                String dictEntry=it.next();
-                if (currentEntryIdx>=dictLength){ newProps[j]=encodeFeat(dictEntry); newDefaultValues[j]="0"; j++; }
+        } else if (dataset.getColumnCount() != Dictionary.getDictionary().size() + 2 + carrier.getPropertyList().size()) {
+            String currentProps[] = dataset.getColumnNames();
+
+            String newProps[] = new String[carrier.getPropertyList().size() - nprops];
+            Object newDefaultValues[] = new Object[carrier.getPropertyList().size() - nprops];
+            int j = 0;
+            for (String prop : carrier.getPropertyList()) {
+                if (!contains(currentProps, prop)) {
+                    newProps[j] = prop;
+                    newDefaultValues[j] = "0";
+                    j++;
+                }
+            }
+            dataset.insertColumnsAt(newProps, newDefaultValues, nprops + 1);
+            nprops += newProps.length;
+
+            newProps = new String[Dictionary.getDictionary().size() - dictLength];
+            newDefaultValues = new Object[Dictionary.getDictionary().size() - dictLength];
+            j = 0;
+            int currentEntryIdx = 0;
+            Iterator<String> it = Dictionary.getDictionary().iterator();
+            while (it.hasNext()) {
+                String dictEntry = it.next();
+                if (currentEntryIdx >= dictLength) {
+                    newProps[j] = encodeFeat(dictEntry);
+                    newDefaultValues[j] = "0";
+                    j++;
+                }
                 currentEntryIdx++;
             }
 
-            dataset.insertColumnsAt(newProps, newDefaultValues, dataset.getColumnCount()-1);
-            dictLength+=newProps.length;
+            dataset.insertColumnsAt(newProps, newDefaultValues, dataset.getColumnCount() - 1);
+            dictLength += newProps.length;
         }
 
         //Create and add the new row
-        Object newRow[]=new Object[nprops+dictLength+2];
-        newRow[0]=carrier.getName();
-        int i=1;
+        Object newRow[] = new Object[nprops + dictLength + 2];
+        newRow[0] = carrier.getName();
+        int i = 1;
         for (Object current : carrier.getValueList()) {
-            newRow[i]=current;
+            newRow[i] = current;
             i++;
         }
         Iterator<String> it = Dictionary.getDictionary().iterator();
         while (it.hasNext()) {
-            newRow[i]=fv.getValue(it.next());
+            newRow[i] = fv.getValue(it.next());
             i++;
         }
-        newRow[i]=carrier.getTarget();
+        newRow[i] = carrier.getTarget();
         dataset.addRow(newRow);
 
         //If islast on the current burst close the dataset
@@ -245,7 +265,7 @@ public class GenerateFeatureVectorOutputPipe extends AbstractPipe implements Sha
 
     @Override
     public void readFromDisk(String dir) {
-        Dictionary.getDictionary().readFromDisk(dir+System.getProperty("File.separator")+"dictionary.ser");
+        Dictionary.getDictionary().readFromDisk(dir + System.getProperty("file.separator") + "dictionary.ser");
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

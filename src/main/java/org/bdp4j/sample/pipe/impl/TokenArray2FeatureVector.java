@@ -80,7 +80,7 @@ public class TokenArray2FeatureVector extends AbstractPipe implements SharedData
 
     @Override
     public void writeToDisk(String dir) {
-        Dictionary.getDictionary().writeToDisk(dir+System.getProperty("File.separator")+"dictionary.ser");
+        Dictionary.getDictionary().writeToDisk(dir + System.getProperty("file.separator") + "dictionary.ser");
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
