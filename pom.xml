@@ -7,11 +7,16 @@
 
     <groupId>org.bdp4j</groupId>
     <artifactId>bdp4j-sample</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
-    <name>bdp4j-sample</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <name>-BDP4J-sample</name>
+    <inceptionYear>2019</inceptionYear>
+    <url>https://github.com/sing-group/bdp4j_sample</url>
+    <description>
+        This project contains an example of use can be found to process SMS messages from 
+        http://www.esp.uem.es/jmgomez/smsspamcorpus/ a make a simple Weka 10-fold cross-validation experiment. 
+        It is very simple but you can find in the example several pipes of different pipes working together.
+    </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,7 +86,7 @@
         <dependency>
             <groupId>org.bdp4j</groupId>
             <artifactId>bdp4j</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
