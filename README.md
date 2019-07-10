@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/sing-group/bdp4j_sample.svg?branch=master)](https://travis-ci.com/sing-group/bdp4j_sample)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+
 # BPP4J (Big Data Preprocessing for Java, https://github.com/sing-group/bdp4j) example
 
 This repository contains an example of use can be found to process SMS messages from http://www.esp.uem.es/jmgomez/smsspamcorpus/ 
